@@ -6,8 +6,15 @@ import config from './config/config';
 export default class BoardStore {
     // reference to the interval
     @observable intervalID: NodeJS.Timer;
-    // whether or not the interval is currently running
+    // whether or not the beep interval is currently running
     @observable isRunning: boolean = false;
+    // the random number if chosen plays the second sound
+    @observable randomNumber: number = 0;
+    // the length of the round measured in the number of times the
+    // second beep occurs 
+    @observable roundLength: number = 0;
+    // the number of times the second beep has played 
+    @observable numberBeepsPlayed: number = 0;
 
     /**
      * Plays either beep1.mp3 or beep2.mp3
@@ -39,15 +46,62 @@ export default class BoardStore {
         let random_time_between_beeps = util.getRandomNumber(0, time_between_beeps.length - 1);
 
         this.intervalID = setInterval(() => {
-            this.playSound(1);
+            let rand = util.getRandomNumber(config.RANDOM_MIN, config.RANDOM_MAX);
+            console.log('rand', rand, 'randomNumber', this.randomNumber);
+            if (this.randomNumber === rand) {
+                this.playSound(2);
+                this.numberBeepsPlayed++;
+                this.endTick();
+            } else {
+                this.playSound(1);
+            }
         }, time_between_beeps[random_time_between_beeps]);
     }
 
     /**
-     * Ends the beep ticking function.
+     * Ends the beep ticking function if random number 
+     * is triggered.
      */
+    @action.bound
     endTick() {
         clearInterval(this.intervalID);
         this.isRunning = false;
+    }
+
+    /**
+     * A number is chosen in between two random numbers. If
+     * the random number is triggered, then the second sound
+     * plays.
+     */
+    setRandomNumber() {
+        this.randomNumber = util.getRandomNumber(config.RANDOM_MIN, config.RANDOM_MAX);
+    }
+
+    /**
+     * Sets the length of the round in number of times the second
+     * beep appears.
+     */
+    setRoundLength() {
+        this.roundLength = util.getRandomNumber(config.MIN_ROUND_LENGTH, config.MAX_ROUND_LENGTH);
+    }
+
+    /**
+     * Starts the round.
+     */
+    @action.bound
+    startRound() {
+        // set length of round
+        this.setRoundLength();
+        // set random number
+        this.setRandomNumber();
+        // start the beep tick function
+        this.startTick();
+    }
+
+    /**
+     * Ends the round.
+     */
+    endRound() {
+
     }
 }
