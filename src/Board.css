@@ -7,6 +7,10 @@
     position: fixed;
 }
 
+.ParentBoard:focus {
+    outline: none;
+}
+
 .Board {
     background-color: #ACD1E9;
     width: 500px;
@@ -23,4 +27,8 @@
 .Board:hover {
     cursor: pointer;
     background-color: #E8D0A9;
+}
+
+.Board:focus {
+    outline: none;
 }

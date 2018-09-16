@@ -7,11 +7,26 @@ interface BoardProps {
 }
 
 export default class Board extends React.Component<BoardProps, {}> {
+    // render the board 
     render() {
         return (
-            <div className='ParentBoard'>
-                <div className='Board' onClick={() => this.props.store.startRound()}>Start</div>
+            <div 
+                className='ParentBoard' 
+                ref='ParentBoard' 
+                tabIndex={0}
+                onKeyDown={(event) => this.props.store.handleKeyDown(event)}>
+                <div 
+                    className='Board' 
+                    onClick={() => this.props.store.startRound()}>
+                    Start
+                </div>
             </div>
         );
+    }
+    
+    // focus the board so key and click events are registered on ParentBoard
+    componentDidMount() {
+        let ref = this.refs.ParentBoard as HTMLElement;
+        ref.focus();
     }
 }

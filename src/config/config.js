@@ -1,7 +1,7 @@
 let config = {};
 
 // the minimum amount of time between beeps, in milliseconds 
-config.MIN_TIME_BETWEEN_BEEPS = 200;
+config.MIN_TIME_BETWEEN_BEEPS = 300;
 // the maximum amount of time between beeps, in milliseconds 
 config.MAX_TIME_BETWEEN_BEEPS = 1000;
 // once a number between RANDOM_MIN and RANDOM_MAX is chosen, 
@@ -14,5 +14,7 @@ config.VOLUME = 0.15;
 config.MIN_ROUND_LENGTH = 1;
 // the maximum number of times the second beep must play
 config.MAX_ROUND_LENGTH = 10;
+// score divisor
+config.SCORE_DIVISOR = 100;
 
 export default config;
