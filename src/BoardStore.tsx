@@ -29,6 +29,8 @@ export default class BoardStore {
     @observable initialReactionTime: number = 0;
     // the actual time the user reacted to the second beep
     @observable actualReactionTime: number = 0;
+    // the message that is shown on bottom of screen
+    @observable message: string = '';
 
     // autorun is usually for debugging, updating the view, or persistence 
     // in our case, we will use it to log the score to the console 
@@ -106,6 +108,8 @@ export default class BoardStore {
     startRound() {
         // check that interval is not currently running 
         if (this.isBeepIntervalRunning) { return; }
+        // update game message
+        this.message = '';
         // start button has been clicked 
         this.hasStartButtonBeenClicked = true;
         // reset the score
@@ -128,8 +132,14 @@ export default class BoardStore {
         this.hasStartButtonBeenClicked = false;
     }
 
+    /**
+     * Performs logic to determine the score.
+     * The minimum score a user can get is '1'
+     */
     calculateScore() {
-        this.score += (this.actualReactionTime - this.initialReactionTime) / config.SCORE_DIVISOR;
+        let timeDifference = (this.actualReactionTime - this.initialReactionTime) / 100;
+        this.score += config.SCORE_DIVIDEND / timeDifference;
+        this.score = Math.ceil(this.score);
     }
 
     /**
@@ -144,7 +154,8 @@ export default class BoardStore {
                 return;
             }
             this.endRound();
-            console.log('game over');
+            // update the game message
+            this.message = 'Game Over';
             return;
         } 
 
@@ -155,7 +166,8 @@ export default class BoardStore {
         // check if player has won that round 
         if (this.numberBeepsPlayed === this.roundLength) {
             console.log('numberBeepsPlayed', this.numberBeepsPlayed, 'roundLength', this.roundLength);
-            this.startRound();
+            // update game message
+            this.message = 'Congratulations! You won!';
             return;
         }
 

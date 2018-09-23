@@ -14,6 +14,8 @@ config.VOLUME = 0.15;
 config.MIN_ROUND_LENGTH = 1;
 // the maximum number of times the second beep must play
 config.MAX_ROUND_LENGTH = 5;
+// score dividend 
+config.SCORE_DIVIDEND = 100;
 // score divisor
 config.SCORE_DIVISOR = 10;
 

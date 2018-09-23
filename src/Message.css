@@ -1,12 +1,14 @@
-.ScoreParent {
+.MessageParent {
     position: fixed;
     width: 100%;
     text-align: center;
+    bottom: 0;
+    margin-bottom: 2%;
 }
 
-.Score {
+.Message {
     display: inline;
     color: #F5FAFA;
-    font-size: 8em;
+    font-size: 4em;
     font-weight: bold;
 }

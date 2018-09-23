@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';;
 import './index.css';
-import Board from './Board';
+import Game from './Game';
 import BoardStore from './BoardStore';
 import registerServiceWorker from './registerServiceWorker';
 
-const boardStore = new BoardStore();
+const store = new BoardStore();
 
 ReactDOM.render(
-  <Board store={boardStore}/>,
+  <Game store={store}/>,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();

@@ -1,4 +1,4 @@
-let config = require('../config/config');
+import config from '../config/config';
 import { Howl } from 'howler';
 export default class util {
     /**
@@ -20,7 +20,7 @@ export default class util {
     static playSound(index: number) {
         let sound = new Howl({
             src: [require(`../../public/audios/beep${index}.mp3`)],
-            autoplay: true,
+            autoplay: false,
             volume: config.VOLUME
         });
         sound.play();
