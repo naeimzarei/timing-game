@@ -31,7 +31,7 @@ To start the server and open up the browser, run this command.
 npm run start
 ```
 
-## Code
+## Folder Structure
 
 The ```src``` folder contains the modules that are shown on the page.
 
