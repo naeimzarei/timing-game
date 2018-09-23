@@ -31,6 +31,20 @@ To start the server and open up the browser, run this command.
 npm run start
 ```
 
+For future development, run this in your terminal to set up a global command line tool for producing a skeleton React and TypeScript project. This command is not needed for now but you will use it later.
+
+```bash
+npm install -g create-react-app
+```
+
+To produce the skeleton project after running the previous command, run this one.
+
+```bash
+create-react-app my-app --scripts-version=react-scripts-ts
+```
+
+For further documentation, visit [TypeScript React Start](https://github.com/Microsoft/TypeScript-React-Starter).
+
 ## Folder Structure
 
 The ```src``` folder contains the modules that are shown on the page.
