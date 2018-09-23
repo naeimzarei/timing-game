@@ -12,10 +12,10 @@
 }
 
 .Board {
-    background-color: #ACD1E9;
-    width: 500px;
-    height: 500px;
-    border-radius: 250px;
+    background-color: #E8D0A9;
+    width: 375px;
+    height: 357px;
+    border-radius: 187.5px;
     color: #F5FAFA;
     display: flex;
     justify-content: center;
@@ -26,7 +26,7 @@
 
 .Board:hover {
     cursor: pointer;
-    background-color: #E8D0A9;
+    background-color: #ACD1E9;
 }
 
 .Board:focus {

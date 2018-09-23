@@ -1,5 +1,4 @@
-import { action, observable } from 'mobx';
-import { Howl } from 'howler';
+import { action, observable, autorun } from 'mobx';
 import util from './util/util';
 import config from './config/config';
 
@@ -10,6 +9,8 @@ export default class BoardStore {
     @observable isBeepIntervalRunning: boolean = false;
     // whether or not the second beep has been triggered yet 
     @observable hasSecondBeepTriggered: boolean = false;
+    // whether or not the start button has been clicked already 
+    @observable hasStartButtonBeenClicked: boolean = false;
     // the random number if chosen plays the second sound
     @observable randomNumber: number = 0;
     // the length of the round measured in the number of times the
@@ -29,17 +30,22 @@ export default class BoardStore {
     // the actual time the user reacted to the second beep
     @observable actualReactionTime: number = 0;
 
+    // autorun is usually for debugging, updating the view, or persistence 
+    // in our case, we will use it to log the score to the console 
+    // as well as updating the score on the page
+    logger = autorun(() => {
+        console.log('score', this.score);
+    });
+
     /**
-     * Plays either beep1.mp3 or beep2.mp3
-     * @param {number} index 
+     * Use the contructor to take care of setting up your 
+     * application, such as setting variables.
      */
-    playSound(index: number) {
-        let sound = new Howl({
-            src: [require(`../public/audios/beep${index}.mp3`)],
-            autoplay: true,
-            volume: config.VOLUME
-        });
-        sound.play();
+    constructor() {
+        // save possible beep durations 
+        for (let i = config.MIN_TIME_BETWEEN_BEEPS; i <= config.MAX_TIME_BETWEEN_BEEPS; i+=100) {
+            this.beepDurations.push(i);
+        }
     }
 
     /**
@@ -47,20 +53,21 @@ export default class BoardStore {
      */
     @action
     startTick() {
-        if (this.isBeepIntervalRunning) { return; }
-
         this.isBeepIntervalRunning = true;
+
+        // the time between beeps chosen randomly each time the second beep plays 
+        this.timeBetweenBeeps = util.getRandomNumber(0, this.beepDurations.length - 1);
 
         this.beepIntervalID = setInterval(() => {
             let rand = util.getRandomNumber(config.RANDOM_MIN, config.RANDOM_MAX);
             if (this.randomNumber === rand) {
                 this.hasSecondBeepTriggered = true;
                 this.initialReactionTime = performance.now();
-                this.playSound(2);
+                util.playSound(2);
                 this.numberBeepsPlayed++;
                 this.endTick();
             } else {
-                this.playSound(1);
+                util.playSound(1);
             }
         }, this.beepDurations[this.timeBetweenBeeps]);
     }
@@ -97,13 +104,12 @@ export default class BoardStore {
      * Starts the round.
      */
     startRound() {
-        // Save all possible beep durations 
-        for (let i = config.MIN_TIME_BETWEEN_BEEPS; i <= config.MAX_TIME_BETWEEN_BEEPS; i+=100) {
-            this.beepDurations.push(i);
-        }
-
-        // the time between beeps chosen randomly 
-        this.timeBetweenBeeps = util.getRandomNumber(0, this.beepDurations.length - 1);
+        // check that interval is not currently running 
+        if (this.isBeepIntervalRunning) { return; }
+        // start button has been clicked 
+        this.hasStartButtonBeenClicked = true;
+        // reset the score
+        this.score = 0;
         // set length of round
         this.setRoundLength();
         // set random number
@@ -116,17 +122,14 @@ export default class BoardStore {
      * Ends the round.
      */
     endRound() {
-        
+        // reset booleans 
+        this.endTick();
+        this.hasSecondBeepTriggered = false;
+        this.hasStartButtonBeenClicked = false;
     }
 
-    /**
-     * Sets the score of the game as a function of reaction time 
-     * over elapsed time of second beep.
-     */
-    @action
     calculateScore() {
         this.score += (this.actualReactionTime - this.initialReactionTime) / config.SCORE_DIVISOR;
-        
     }
 
     /**
@@ -134,10 +137,28 @@ export default class BoardStore {
      * @param {React.KeyboardEvent<HTMLDivElement>} key event 
      */
     handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-        if (this.hasSecondBeepTriggered !== true) { return; } 
+        // end the game if the user clicks a button before the second beep 
+        if (this.hasSecondBeepTriggered !== true) { 
+            // Do nothing if start button has not been clicked at beginning of round 
+            if (this.hasStartButtonBeenClicked !== true) {
+                return;
+            }
+            this.endRound();
+            console.log('game over');
+            return;
+        } 
+
+        this.hasSecondBeepTriggered = false;
         this.actualReactionTime = performance.now();
         this.calculateScore();
-        this.hasSecondBeepTriggered = false;
+
+        // check if player has won that round 
+        if (this.numberBeepsPlayed === this.roundLength) {
+            console.log('numberBeepsPlayed', this.numberBeepsPlayed, 'roundLength', this.roundLength);
+            this.startRound();
+            return;
+        }
+
         this.startTick();
     }
 }
