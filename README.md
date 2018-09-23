@@ -4,31 +4,31 @@
 Open up a terminal and navigate to the folder where you want to download this repository. For instance...
 
 ```bash
-    cd Documents/Repos
+cd Documents/Repos
 ```
 
 To clone the directory, run the following command. 
 
 ```bash
-    git clone https://github.com/naeimzarei/timing-game.git
+git clone https://github.com/naeimzarei/timing-game.git
 ```
 
 Change your directory to timing-game.
 
 ```bash
-    cd Documents/Repos/timing-game
+cd Documents/Repos/timing-game
 ```
 
 To install dependencies, you must first install Node.js and run the following command after navigating to the root folder.
 
 ```bash
-    npm install 
+npm install 
 ```
 
 To start the server and open up the browser, run this command.
 
 ```bash
-    npm run start
+npm run start
 ```
 
 ## Code
