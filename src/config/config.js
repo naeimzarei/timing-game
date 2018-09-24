@@ -1,5 +1,7 @@
 let config = {};
 
+// beep audio file URL
+config.BEEP_URL = 'https://www.cs.unc.edu/~gb/uploaded-files/naeimz@CS.UNC.EDU';
 // the minimum amount of time between beeps, in milliseconds 
 config.MIN_TIME_BETWEEN_BEEPS = 300;
 // the maximum amount of time between beeps, in milliseconds 

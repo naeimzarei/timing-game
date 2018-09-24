@@ -19,7 +19,7 @@ export default class util {
      */
     static playSound(index: number) {
         let sound = new Howl({
-            src: [require(`../../public/audios/beep${index}.mp3`)],
+            src: [`${config.BEEP_URL}/beep${index}.mp3`],
             autoplay: false,
             volume: config.VOLUME
         });
